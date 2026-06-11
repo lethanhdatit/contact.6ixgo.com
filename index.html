@@ -441,14 +441,14 @@
 
       var secHtml=sec.map(function(ph){
         return '<div class="s-sec-wrap"><span class="s-or">\ub610\ub294</span>'
-          +'<a class="s-sec-tel s-tel-link" href="tel:'+telNum(ph.value)+'" data-tel="'+telNum(ph.value)+'">'+esc(ph.value)+'</a></div>';
+          +'<a class="s-sec-tel" href="tel:'+telNum(ph.value)+'">'+esc(ph.value)+'</a></div>';
       }).join('');
 
       var phoneHtml=pri
         ?'<div class="s-phones">'
           +'<img class="s-icon" src="/assets/contact/icon-phone.svg" alt="" aria-hidden="true"/>'
           +'<p class="s-label-sm">문의</p>'
-          +'<a class="s-call s-tel-link" href="tel:'+telNum(pri.value)+'" data-tel="'+telNum(pri.value)+'">'+esc(pri.value)+'&nbsp;\uc5f0\uacb0</a>'
+          +'<a class="s-call" href="tel:'+telNum(pri.value)+'">'+esc(pri.value)+'&nbsp;\uc5f0\uacb0</a>'
           +secHtml+'</div>':'';
 
       var kakaoHtml=kk
@@ -490,12 +490,6 @@
 
       document.querySelectorAll('.s-copy-btn[data-copy]').forEach(function(btn){
         btn.addEventListener('click',function(){ copyText(this.getAttribute('data-copy')); });
-      });
-      document.querySelectorAll('.s-tel-link[data-tel]').forEach(function(a){
-        a.addEventListener('click',function(e){
-          e.preventDefault();
-          window.location.href='tel:'+this.getAttribute('data-tel');
-        });
       });
       document.getElementById('s-share-btn').addEventListener('click', openSharePanel);
 
