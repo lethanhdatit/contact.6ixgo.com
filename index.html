@@ -75,17 +75,6 @@
   <script>
     var FE_ORIGIN = 'https://6ixgo.com';
 
-    // ── tel: bridge ─────────────────────────────────────────────────────────
-    // FE (6ixgo.com) cannot navigate tel: from inside a cross-origin iframe.
-    // It postMessages the href here; we execute it from the parent context.
-    window.addEventListener('message', function (e) {
-      if (e.origin !== FE_ORIGIN) return;
-      if (e.data && e.data.type === 'contact-tel' && typeof e.data.href === 'string') {
-        if (/^tel:[+\d\s()-]+$/.test(e.data.href)) {
-          window.location.href = e.data.href;
-        }
-      }
-    });
     // ── Path → embed URL ────────────────────────────────────────────────────
     // Rule: insert "contact" before the last path segment (slug).
     //
