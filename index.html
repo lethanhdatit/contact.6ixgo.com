@@ -499,14 +499,6 @@
       document.querySelectorAll('.s-copy-btn[data-copy]').forEach(function(btn){
         btn.addEventListener('click',function(){ copyText(this.getAttribute('data-copy')); });
       });
-      /* Safety net for Android in-app browsers (KakaoTalk, Zalo, Samsung browser older builds)
-         that don't fire Intent on anchor click — force via location assign instead. */
-      document.querySelectorAll('a[href^="tel:"]').forEach(function(a){
-        a.addEventListener('click',function(e){
-          e.preventDefault();
-          window.location.href=this.getAttribute('href');
-        });
-      });
       document.getElementById('s-share-btn').addEventListener('click', openSharePanel);
 
       var title=contact.detail.title+' | 6ixgo';
