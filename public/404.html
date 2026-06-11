@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <script>
+    // GitHub Pages SPA trick:
+    // Any path that doesn't exist as a static file lands here.
+    // Store the full URL and redirect to / where index.html will restore the path.
+    sessionStorage.setItem('gh-pages-redirect', window.location.href);
+    window.location.replace('/');
+  </script>
+</head>
+<body></body>
+</html>

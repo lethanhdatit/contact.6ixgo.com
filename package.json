@@ -1,0 +1,13 @@
+{
+  "name": "6ixgo-contact",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Iframe container for 6ixgo contact pages, deployed to contact.6ixgo.com via GitHub Pages",
+  "scripts": {
+    "deploy": "gh-pages -d public --dotfiles --message 'deploy [skip ci]'",
+    "deploy:dry": "echo 'Deploying public/ → gh-pages branch on origin'"
+  },
+  "devDependencies": {
+    "gh-pages": "^6.3.0"
+  }
+}
