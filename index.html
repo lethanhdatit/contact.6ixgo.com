@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>6ixgo Contact</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; width: 100%; overflow: hidden; background: #f4f4f5; }
+    iframe {
+      display: block;
+      width: 100%;
+      height: 100vh;
+      height: 100dvh;
+      border: none;
+    }
+    #not-found {
+      display: none;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      text-align: center;
+      padding: 80px 20px;
+      color: #343a40;
+    }
+    #not-found h1 { font-size: 24px; margin-bottom: 12px; }
+    #not-found p  { font-size: 15px; color: #868e96; }
+    #not-found a  { display: inline-block; margin-top: 24px; color: #3f57f6; text-decoration: none; }
+  </style>
+  <script>
+    // ── GitHub Pages SPA trick ──────────────────────────────────────────────
+    // 404.html stores the original URL in sessionStorage; restore it here.
+    (function () {
+      var stored = sessionStorage.getItem('gh-pages-redirect');
+      if (stored) {
+        sessionStorage.removeItem('gh-pages-redirect');
+        var restored = stored.slice(window.location.origin.length);
+        if (restored && restored !== '/') {
+          window.history.replaceState(null, '', restored);
+        }
+      }
+    })();
+  </script>
+</head>
+<body>
+  <iframe
+    id="frame"
+    allow="clipboard-write; clipboard-read"
+    sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-top-navigation"
+    title="6ixgo Contact"
+  ></iframe>
+  <div id="not-found">
+    <h1>페이지를 찾을 수 없습니다</h1>
+    <p>The page you're looking for doesn't exist.</p>
+    <a href="https://6ixgo.com">← Go to 6ixgo</a>
+  </div>
+
+  <script>
+    var FE_ORIGIN = 'https://6ixgo.com';
+
+    // ── Path → embed URL ────────────────────────────────────────────────────
+    // Rule: insert "contact" before the last path segment (slug).
+    //
+    //   /slug                  →  /contact/slug
+    //   /lang/slug             →  /lang/contact/slug
+    //   /country/lang/slug     →  /country/lang/contact/slug
+    //
+    // This matches the FE Next.js route: [country]/[lang]/(contact)/contact/[slug]
+    function getEmbedUrl() {
+      var parts = window.location.pathname
+        .replace(/^\/+|\/+$/g, '')
+        .split('/')
+        .filter(Boolean);
+
+      if (parts.length === 0) return null;
+
+      var slug   = parts[parts.length - 1];
+      var prefix = parts.slice(0, -1);
+
+      var path = prefix.length > 0
+        ? '/' + prefix.join('/') + '/contact/' + slug
+        : '/contact/' + slug;
+
+      return FE_ORIGIN + path;
+    }
+
+    // ── Boot ────────────────────────────────────────────────────────────────
+    var embedUrl = getEmbedUrl();
+    if (embedUrl) {
+      // Update page title with the slug for human readability
+      var slug = window.location.pathname.split('/').filter(Boolean).pop() || '';
+      if (slug) {
+        document.title = slug.replace(/-/g, ' ')
+          .replace(/\b\w/g, function(c) { return c.toUpperCase(); })
+          + ' | 6ixgo';
+      }
+      document.getElementById('frame').src = embedUrl;
+    } else {
+      document.getElementById('frame').style.display = 'none';
+      document.getElementById('not-found').style.display = 'block';
+    }
+  </script>
+</body>
+</html>
