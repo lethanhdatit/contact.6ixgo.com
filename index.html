@@ -5,6 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="noindex, nofollow" />
   <title>6ixgo Contact</title>
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="6ixgo" />
+  <meta property="og:title" content="6ixgo Contact" />
+  <meta property="og:description" content="6ixgo 연락처 정보" />
+  <meta property="og:image" content="https://6ixgo.com/assets/contact/map-desktop.png" />
+  <meta property="og:image:width" content="628" />
+  <meta property="og:image:height" content="388" />
+  <meta property="og:image:alt" content="6ixgo contact location map" />
+  <meta property="og:url" content="https://contact.6ixgo.com/" />
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="6ixgo Contact" />
+  <meta name="twitter:image" content="https://6ixgo.com/assets/contact/map-desktop.png" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html, body { height: 100%; width: 100%; overflow: hidden; background: #f4f4f5; }
@@ -89,12 +103,16 @@
     // ── Boot ────────────────────────────────────────────────────────────────
     var embedUrl = getEmbedUrl();
     if (embedUrl) {
-      // Update page title with the slug for human readability
       var slug = window.location.pathname.split('/').filter(Boolean).pop() || '';
       if (slug) {
-        document.title = slug.replace(/-/g, ' ')
+        var pageTitle = slug.replace(/-/g, ' ')
           .replace(/\b\w/g, function(c) { return c.toUpperCase(); })
           + ' | 6ixgo';
+        // Update <title> and OG meta for JS-aware crawlers (Telegram, iMessage, etc.)
+        document.title = pageTitle;
+        document.querySelector('meta[property="og:title"]').setAttribute('content', pageTitle);
+        document.querySelector('meta[name="twitter:title"]').setAttribute('content', pageTitle);
+        document.querySelector('meta[property="og:url"]').setAttribute('content', window.location.href);
       }
       document.getElementById('frame').src = embedUrl;
     } else {
