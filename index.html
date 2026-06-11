@@ -80,7 +80,10 @@
         ? '/' + prefix.join('/') + '/contact/' + slug
         : '/contact/' + slug;
 
-      return FE_ORIGIN + path;
+      // Canonical share URL = contact.6ixgo.com/<slug> (no lang/country prefix)
+      var shareUrl = window.location.origin + '/' + slug;
+
+      return FE_ORIGIN + path + '?_shareUrl=' + encodeURIComponent(shareUrl);
     }
 
     // ── Boot ────────────────────────────────────────────────────────────────
