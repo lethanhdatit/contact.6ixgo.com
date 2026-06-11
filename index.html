@@ -3,17 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="robots" content="noindex, nofollow" />
-  <!-- Prevent browser from caching this container page -->
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
+  <meta name="robots" content="noindex, nofollow" />
   <title>6ixgo Contact</title>
   <link rel="icon" type="image/x-icon" href="/favicon.ico" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-  <!-- Open Graph -->
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="6ixgo" />
   <meta property="og:title" content="6ixgo Contact" />
@@ -23,110 +21,337 @@
   <meta property="og:image:height" content="388" />
   <meta property="og:image:alt" content="6ixgo contact location map" />
   <meta property="og:url" content="https://contact.6ixgo.com/" />
-  <!-- Twitter / X -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="6ixgo Contact" />
   <meta name="twitter:image" content="https://6ixgo.com/assets/contact/map-desktop.png" />
   <style>
+
+    /* ── Reset ──────────────────────────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body { height: 100%; width: 100%; overflow: hidden; background: #f4f4f5; }
-    iframe {
-      display: block;
-      width: 100%;
-      height: 100vh;
-      height: 100dvh;
-      border: none;
+    html { height: 100%; }
+    body {
+      min-height: 100%;
+      font-family: -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo',
+                   'Malgun Gothic', 'Noto Sans KR', sans-serif;
+      -webkit-text-size-adjust: 100%;
+      background: #f4f4f5;
+    }
+    #frame {
+      display: none;
+      width: 100%; height: 100vh; height: 100dvh; border: none;
     }
     #not-found {
-      display: none;
-      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-      text-align: center;
-      padding: 80px 20px;
-      color: #343a40;
+      display: none; text-align: center; padding: 80px 20px; color: #343a40;
     }
     #not-found h1 { font-size: 24px; margin-bottom: 12px; }
     #not-found p  { font-size: 15px; color: #868e96; }
     #not-found a  { display: inline-block; margin-top: 24px; color: #3f57f6; text-decoration: none; }
+    #toast {
+      position: fixed; bottom: 32px; left: 50%;
+      transform: translateX(-50%) translateY(12px);
+      background: #343a40; color: #fff;
+      padding: 10px 20px; border-radius: 8px; font-size: 14px;
+      opacity: 0; transition: opacity .2s, transform .2s;
+      pointer-events: none; z-index: 9999; white-space: nowrap;
+    }
+    #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    #static-page { display: none; }
+    .s-outer { min-height: 100vh; min-height: 100dvh; background: #f4f4f5; }
+    .s-col {
+      position: relative; margin: 0 auto;
+      min-height: 100vh; min-height: 100dvh;
+      max-width: 628px;
+      border-left: 1px solid #f1f3f5; border-right: 1px solid #f1f3f5;
+      background: #fff; padding-bottom: 40px;
+      box-shadow: 0 2px 4px 0 rgba(0,0,0,.04);
+    }
+    @media (min-width:768px) { .s-col { padding-bottom: 64px; } }
+    .s-bg {
+      pointer-events: none; position: absolute; left: 0; right: 0;
+      background-repeat: no-repeat; z-index: 0;
+    }
+    .s-bg-top {
+      top: 0; height: 232px;
+      background-image: url('/assets/contact/bg-grid-mobile-top.png');
+      background-size: 100% 100%; background-position: top left;
+    }
+    .s-bg-bottom {
+      bottom: 0; height: 232px;
+      background-image: url('/assets/contact/bg-grid-mobile-bottom.png');
+      background-size: 100% 100%; background-position: bottom left;
+    }
+    @media (min-width:768px) {
+      .s-bg-top { height:388px; background-image:url('/assets/contact/bg-grid-top.png'); background-size:628px 388px; }
+      .s-bg-bottom { height:388px; background-image:url('/assets/contact/bg-grid-bottom.png'); background-size:628px 388px; }
+    }
+    .s-z6 { position:relative; z-index:6; }
+    .s-z5 { position:relative; z-index:5; }
+    .s-z4 { position:relative; z-index:4; }
+    .s-z3 { position:relative; z-index:3; }
+    .s-title-row { padding: 52px 20px 24px; }
+    @media (min-width:768px) { .s-title-row { padding: 52px 64px 28px; } }
+    .s-title { text-align:center; font-size:18px; font-weight:700; line-height:24px; color:#343a40; }
+    @media (min-width:768px) { .s-title { font-size:24px; line-height:1.2; } }
+    .s-share-wrap {
+      position:absolute; right:24px; top:52px; height:24px;
+      display:flex; align-items:center;
+    }
+    @media (min-width:768px) { .s-share-wrap { height:32px; } }
+    .s-share-btn {
+      display:flex; align-items:center; justify-content:center;
+      width:32px; height:32px; border-radius:50%; background:#3F57F6;
+      border:none; cursor:pointer; padding:6px; transition:opacity .15s; flex-shrink:0;
+    }
+    @media (min-width:768px) { .s-share-btn { padding:8px; } }
+    .s-share-btn:hover { opacity:.9; }
+    .s-section {
+      display:flex; flex-direction:column; align-items:center;
+      gap:16px; padding:24px 20px; text-align:center;
+    }
+    @media (min-width:768px) { .s-section { padding:28px 64px; } }
+    .s-icon { width:32px; height:32px; flex-shrink:0; display:block; }
+    .s-label { font-weight:600; font-size:17px; line-height:1.4; letter-spacing:-.015em; color:#343a40; }
+    .s-label-sm { font-weight:600; font-size:15px; line-height:1.4; letter-spacing:-.01em; color:#343a40; }
+    .s-addr-lines { display:flex; flex-direction:column; align-items:center; gap:0; }
+    .s-addr-line { font-size:15px; line-height:1.4; letter-spacing:-.01em; color:#565e66; text-decoration:underline; text-decoration-color:#565e66; }
+    .s-addr-line-row { display:flex; align-items:center; gap:4px; }
+    .s-copy-btn {
+      background:none; border:none; cursor:pointer; color:#adb5bd;
+      padding:2px; display:inline-flex; align-items:center;
+      flex-shrink:0; transition:color .15s; line-height:0;
+    }
+    .s-copy-btn:hover { color:#343a40; }
+    .s-map { border-radius:8px; object-fit:cover; display:block; }
+    .s-map-mo { width:100%; aspect-ratio:500/360; }
+    .s-map-dt { display:none; }
+    @media (min-width:768px) { .s-map-mo { display:none; } .s-map-dt { display:block; width:500px; height:360px; } }
+    .s-maps-link {
+      font-size:15px; line-height:1.4; letter-spacing:-.01em;
+      color:#565e66; text-decoration:underline; text-decoration-color:#565e66;
+      transition:color .15s, text-decoration-color .15s;
+    }
+    .s-maps-link:hover { color:#3F57F6; text-decoration-color:#3F57F6; }
+    .s-card-outer { padding:24px 32px; }
+    @media (min-width:768px) { .s-card-outer { padding:32px 64px 0; } }
+    .s-card {
+      width:100%; overflow:hidden; border-radius:12px;
+      border:1px solid #f1f3f5; background:#fff;
+      filter:drop-shadow(0px 8px 6px rgba(0,0,0,.04));
+    }
+    @media (min-width:768px) { .s-card { width:350px; margin:0 auto; } }
+    .s-card-body { padding:44px 24px; display:flex; flex-direction:column; align-items:center; gap:28px; }
+    @media (min-width:768px) { .s-card-body { padding:32px 40px; } }
+    .s-phones { display:flex; flex-direction:column; align-items:center; gap:12px; width:100%; }
+    .s-call {
+      display:flex; width:100%; align-items:center; justify-content:center;
+      border-radius:9999px; background:#343a40; padding:12px 40px;
+      font-size:16px; font-weight:500; line-height:24px; color:#fff;
+      text-decoration:none; transition:opacity .15s;
+    }
+    @media (min-width:768px) { .s-call { width:auto; padding:12px 48px; } }
+    .s-call:hover { opacity:.9; }
+    .s-sec-wrap { display:flex; flex-direction:column; align-items:center; gap:2px; padding-top:8px; }
+    .s-or { font-size:11px; line-height:1.4; color:#565e66; }
+    .s-sec-tel { font-size:13px; line-height:1.4; color:#343a40; text-decoration:underline; text-decoration-color:#343a40; transition:color .15s; }
+    .s-sec-tel:hover { color:#3F57F6; text-decoration-color:#3F57F6; }
+    .s-hr { width:200px; border:none; border-top:1px solid #f1f3f5; }
+    .s-kakao { display:flex; flex-direction:column; align-items:center; gap:12px; }
+    .s-kakao-info { display:flex; flex-direction:column; align-items:center; gap:2px; }
+    .s-kakao-row { display:flex; align-items:center; gap:2px; padding-left:16px; }
+    .s-kakao-val { font-size:13px; line-height:1.4; color:#565e66; }
   </style>
   <script>
-    // ── GitHub Pages SPA trick ──────────────────────────────────────────────
-    // 404.html stores the original URL in sessionStorage; restore it here.
-    (function () {
-      var stored = sessionStorage.getItem('gh-pages-redirect');
-      if (stored) {
-        sessionStorage.removeItem('gh-pages-redirect');
-        var restored = stored.slice(window.location.origin.length);
-        if (restored && restored !== '/') {
-          window.history.replaceState(null, '', restored);
-        }
-      }
-    })();
+    (function(){var s=sessionStorage.getItem('gh-pages-redirect');if(s){sessionStorage.removeItem('gh-pages-redirect');var r=s.slice(window.location.origin.length);if(r&&r!=='/')window.history.replaceState(null,'',r);}})();
   </script>
 </head>
 <body>
-  <iframe
-    id="frame"
-    allow="clipboard-write; clipboard-read; geolocation; camera; microphone; payment; autoplay; fullscreen"
-    referrerpolicy="no-referrer-when-downgrade"
-    title="6ixgo Contact"
-  ></iframe>
-  <div id="not-found">
-    <h1>페이지를 찾을 수 없습니다</h1>
-    <p>The page you're looking for doesn't exist.</p>
-    <a href="https://6ixgo.com">← Go to 6ixgo</a>
-  </div>
-
+  <iframe id="frame" allow="clipboard-write;clipboard-read;geolocation;camera;microphone;payment;autoplay;fullscreen" referrerpolicy="no-referrer-when-downgrade" title="6ixgo Contact"></iframe>
+  <div id="static-page"></div>
+  <div id="not-found"><h1>페이지를 찾을 수 없습니다</h1><p>The page you're looking for doesn't exist.</p><a href="https://6ixgo.com">← Go to 6ixgo</a></div>
+  <div id="toast"></div>
   <script>
+    /* =====================================================================
+       MODE FLAG  — switch rendering approach
+         'static'  →  fetch /data/{slug}.json and render full HTML  (default)
+         'iframe'  →  wrap 6ixgo.com contact page in iframe
+    ===================================================================== */
+    var MODE = 'static';
+
     var FE_ORIGIN = 'https://6ixgo.com';
 
-    // ── Path → embed URL ────────────────────────────────────────────────────
-    // Rule: insert "contact" before the last path segment (slug).
-    //
-    //   /slug                  →  /contact/slug
-    //   /lang/slug             →  /lang/contact/slug
-    //   /country/lang/slug     →  /country/lang/contact/slug
-    //
-    // This matches the FE Next.js route: [country]/[lang]/(contact)/contact/[slug]
-    function getEmbedUrl() {
-      var parts = window.location.pathname
-        .replace(/^\/+|\/+$/g, '')
-        .split('/')
-        .filter(Boolean);
-
-      if (parts.length === 0) return null;
-
-      var slug   = parts[parts.length - 1];
-      var prefix = parts.slice(0, -1);
-
-      var path = prefix.length > 0
-        ? '/' + prefix.join('/') + '/contact/' + slug
-        : '/contact/' + slug;
-
-      // Canonical share URL = contact.6ixgo.com/<slug> (no lang/country prefix)
-      var shareUrl = window.location.origin + '/' + slug;
-
-      return FE_ORIGIN + path + '?_shareUrl=' + encodeURIComponent(shareUrl);
+    function getPathParts() {
+      return window.location.pathname.replace(/^\/+|\/+$/g,'').split('/').filter(Boolean);
     }
 
-    // ── Boot ────────────────────────────────────────────────────────────────
-    var embedUrl = getEmbedUrl();
-    if (embedUrl) {
-      var slug = window.location.pathname.split('/').filter(Boolean).pop() || '';
-      if (slug) {
-        var pageTitle = slug.replace(/[-_]/g, ' ')
-          .replace(/\b\w/g, function(c) { return c.toUpperCase(); })
-          + ' | 6ixgo';
-        // Update <title> and OG meta for JS-aware crawlers (Telegram, iMessage, etc.)
-        document.title = pageTitle;
-        document.querySelector('meta[property="og:title"]').setAttribute('content', pageTitle);
-        document.querySelector('meta[name="twitter:title"]').setAttribute('content', pageTitle);
-        document.querySelector('meta[property="og:url"]').setAttribute('content', window.location.href);
+    function esc(s) {
+      return String(s)
+        .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+        .replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+    }
+
+    function showToast(msg) {
+      var t=document.getElementById('toast');
+      t.textContent=msg; t.classList.add('show');
+      setTimeout(function(){ t.classList.remove('show'); }, 2000);
+    }
+
+    function copyText(text, msg) {
+      var m = msg || '\ud074\ub9bd\ubcf4\ub4dc\uc5d0 \ubcf5\uc0ac\ub418\uc5c8\uc2b5\ub2c8\ub2e4';
+      function done() { showToast(m); }
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(text).then(done).catch(fb);
+      } else { fb(); }
+      function fb() {
+        var ta=document.createElement('textarea');
+        ta.value=text; ta.style.cssText='position:fixed;top:-9999px;left:-9999px';
+        document.body.appendChild(ta); ta.select();
+        try { document.execCommand('copy'); done(); } catch(e){}
+        document.body.removeChild(ta);
       }
-      document.getElementById('frame').src = embedUrl;
-    } else {
-      document.getElementById('frame').style.display = 'none';
-      document.getElementById('not-found').style.display = 'block';
     }
-  </script>
+
+    function copyShareLink() {
+      copyText(window.location.href.split('?')[0],
+        '\ub9c1\ud06c\uac00 \ubcf5\uc0ac\ub418\uc5c8\uc2b5\ub2c8\ub2e4');
+    }
+
+    function processFields(fields) {
+      var loc=null,pri=null,sec=[],kk=null;
+      fields.forEach(function(f){
+        if(f.field==='location'&&!loc) loc=f;
+        else if(f.field==='phoneNumber'){ if(!pri) pri=f; else sec.push(f); }
+        else if(f.field==='kakaoTalk'&&!kk) kk=f;
+      });
+      return {location:loc,primaryPhone:pri,secondaryPhones:sec,kakaoTalk:kk};
+    }
+
+    function splitAddr(addr) {
+      var p=addr.split(',');
+      if(p.length<3) return null;
+      return {line1:p.slice(0,-2).join(',').trim(), line2:p.slice(-2).join(',').trim()};
+    }
+
+    var SVG_SHARE='<svg width="20" height="20" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M176,160a40.06,40.06,0,0,0-29.05,12.28l-55.28-30.69a39.4,39.4,0,0,0,0-27.18L146.95,83.72A40,40,0,1,0,136,56a40.4,40.4,0,0,0,1.06,9.17L81.78,95.86a40,40,0,1,0,0,64.28L137.06,191A40.4,40.4,0,0,0,136,200a40,40,0,1,0,40-40ZM176,48a16,16,0,1,1-16,16A16,16,0,0,1,176,48ZM72,144a16,16,0,1,1,16-16A16,16,0,0,1,72,144ZM176,216a16,16,0,1,1,16-16A16,16,0,0,1,176,216Z" fill="white"/></svg>';
+
+    var SVG_COPY='<svg width="16" height="16" viewBox="0 0 256 256" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M216,32H88a8,8,0,0,0-8,8V80H40a8,8,0,0,0-8,8V216a8,8,0,0,0,8,8H168a8,8,0,0,0,8-8V176h40a8,8,0,0,0,8-8V40A8,8,0,0,0,216,32ZM160,208H48V96H160Zm48-48H176V88a8,8,0,0,0-8-8H96V48H208Z"/></svg>';
+
+    var SVG_KAKAO='<svg aria-label="KakaoTalk" class="s-icon" fill="none" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#ck)"><path d="M0 0H200V200H0V0Z" fill="#FFE912"/><path d="M97.1949 36.0246C102.876 35.5918 111.653 36.4268 117.285 37.2953C121.374 37.9258 129.474 40.3787 133.427 41.9197C146.751 47.0402 158.236 56.0324 166.405 67.7379C173.656 78.2652 176.049 91.7061 173.574 104.154C166.331 140.582 120.21 158.673 86.851 152.482C84.5356 154.076 82.5061 155.65 80.0871 157.241C79.5754 157.618 79.0606 157.99 78.5426 158.358C71.3576 163.443 63.8145 168.514 56.2797 173.074C53.8168 174.565 52.7162 173.549 53.0994 170.831C53.7762 166.029 55.5344 161.508 56.8705 156.868C57.9608 152.599 59.0356 148.704 60.3975 144.503C55.5166 142.228 51.7535 139.714 47.4781 136.488C22.4131 117.575 17.4079 84.2967 39.2258 60.5428C46.941 52.2559 56.4438 45.8369 67.0121 41.7736C77.3234 37.8045 86.1983 36.4879 97.1949 36.0246Z" fill="black"/><path d="M83.2768 76.9853C86.5641 76.7173 88.3085 78.2763 89.661 81.0035C91.6278 84.9697 92.7761 89.0681 94.3636 93.132L98.4415 103.795C99.553 106.747 103.066 113.114 98.7657 114.823C97.0604 115.5 95.403 115.331 93.7378 114.639C92.6706 112.346 91.5122 109.904 90.8126 107.485L85.2102 107.496C82.6595 107.511 80.1087 107.494 77.5585 107.444C76.4173 111.422 75.2917 117.106 69.6831 114.854C66.746 113.674 67.2804 110.574 68.2524 108.197C70.4495 102.823 72.1888 97.2709 74.5136 91.9427C75.8874 88.7222 76.6495 85.2539 78.2389 82.0621C79.6755 79.1771 80.1565 78.1439 83.2768 76.9853Z" fill="#FFE912"/><path d="M84.0167 88.4365C84.8901 89.7135 87.7063 97.7324 88.7239 99.9631L84.953 99.998C83.2411 100.011 81.529 99.9893 79.8179 99.9344C80.8827 96.2816 82.9222 92.2385 84.0167 88.4365Z" fill="black"/><path d="M130.07 76.9719C136.851 76.5334 135.758 85.9084 135.361 90.626C136.687 89.6262 137.778 88.299 138.939 87.1154C141.49 84.5158 144.013 81.824 146.686 79.3516C147.598 78.5078 148.66 77.5313 149.987 77.6074C151.119 77.6725 152.254 78.4119 152.987 79.2443C153.706 80.0611 154.204 81.1022 154.105 82.2123C153.938 84.0877 145.113 92.5781 143.264 94.1147C145.006 96.1307 154.271 108.182 154.912 110.012C154.946 112.072 154.024 113.927 152.016 114.822C147.363 116.894 144.041 108.528 141.347 105.809C140.189 104.64 137.526 100.973 137.069 99.8194L135.44 101.464C135.346 105.246 136.727 113.712 132.289 115.084C131.307 115.398 130.239 115.299 129.332 114.81C126.588 113.348 126.807 110.535 126.82 107.89C126.861 99.0656 126.733 90.2332 126.899 81.4115C126.94 79.2235 128.248 77.9742 130.07 76.9719Z" fill="#FFE912"/><path d="M46.9426 76.99C53.7551 76.6837 60.8795 77.14 67.7226 76.9341C69.5134 76.8802 71.4744 76.9575 72.8052 78.3404C73.5593 79.1396 73.9625 80.2072 73.9248 81.3054C73.881 83.0454 73.1509 83.9273 71.964 85.063C69.8437 85.5236 65.2984 85.363 62.9011 85.3472L62.8931 107.474C62.9267 110.068 63.0808 111.17 62.2902 113.652C60.4093 115.41 57.6732 116.042 55.6818 114.071C55.0125 113.398 54.5707 112.533 54.4183 111.596C54.1804 110.199 54.2855 104.633 54.2867 102.948L54.3035 85.3497C51.4894 85.3773 47.8174 85.5355 45.1191 85.0232C44.2603 83.9382 43.8199 82.6978 43.4174 81.4001C44.0935 78.9396 44.3892 77.7825 46.9426 76.99Z" fill="#FFE912"/><path d="M106.524 76.9848C106.684 76.9738 106.844 76.9652 107.004 76.9596C112.086 76.783 111.615 81.3363 111.728 85.0043C111.784 86.8123 111.731 88.6666 111.731 90.4777L111.72 106.826C115.799 106.857 120.297 106.328 124.041 107.639C124.623 108.893 124.74 109.36 125.065 110.698C124.376 113.225 124.017 114.077 121.452 114.603C117.332 114.808 110.425 114.744 106.274 114.429C104.697 114.309 103.738 112.788 102.953 111.542C102.807 107.442 102.562 81.983 103.258 79.932C103.759 78.4537 105.213 77.6389 106.524 76.9848Z" fill="#FFE912"/></g><defs><clipPath id="ck"><rect fill="white" height="200" rx="100" width="200"/></clipPath></defs></svg>';
+
+    function renderStatic(apiData) {
+      var contact=apiData.data;
+      var p=processFields(contact.detail.fields);
+      var loc=p.location,pri=p.primaryPhone,sec=p.secondaryPhones,kk=p.kakaoTalk;
+      var mapsUrl=loc?'https://www.google.com/maps/dir/?api=1&destination='+loc.lat+','+loc.lng:null;
+      var al=loc?splitAddr(loc.value):null;
+
+      var addrHtml='';
+      if(loc){
+        if(al){
+          addrHtml='<span class="s-addr-line">'+esc(al.line1)+',</span>'
+            +'<span class="s-addr-line-row"><span class="s-addr-line">'+esc(al.line2)+'</span>'
+            +'<button class="s-copy-btn" data-copy="'+esc(loc.value)+'" aria-label="\uc8fc\uc18c \ubcf5\uc0ac">'+SVG_COPY+'</button></span>';
+        } else {
+          addrHtml='<span class="s-addr-line-row"><span class="s-addr-line">'+esc(loc.value)+'</span>'
+            +'<button class="s-copy-btn" data-copy="'+esc(loc.value)+'" aria-label="\uc8fc\uc18c \ubcf5\uc0ac">'+SVG_COPY+'</button></span>';
+        }
+      }
+
+      var secHtml=sec.map(function(ph){
+        return '<div class="s-sec-wrap"><span class="s-or">\ub610\ub294</span>'
+          +'<a class="s-sec-tel" href="tel:'+esc(ph.value)+'" target="_blank">'+esc(ph.value)+'</a></div>';
+      }).join('');
+
+      var phoneHtml=pri
+        ?'<div class="s-phones">'
+          +'<img class="s-icon" src="/assets/contact/icon-phone.svg" alt="" aria-hidden="true"/>'
+          +'<p class="s-label-sm">\ubb38\uc758</p>'
+          +'<a class="s-call" href="tel:'+esc(pri.value)+'" target="_blank">'+esc(pri.value)+'&nbsp;\uc5f0\uacb0</a>'
+          +secHtml+'</div>':'';
+
+      var kakaoHtml=kk
+        ?'<div class="s-kakao">'+SVG_KAKAO
+          +'<div class="s-kakao-info"><p class="s-label-sm">KaKaoTalkID</p>'
+          +'<div class="s-kakao-row"><span class="s-kakao-val">'+esc(kk.value)+'</span>'
+          +'<button class="s-copy-btn" data-copy="'+esc(kk.value)+'" aria-label="\uce74\uce74\uc624\ud1a1 \uc544\uc774\ub514 \ubcf5\uc0ac">'+SVG_COPY+'</button>'
+          +'</div></div></div>':'';
+
+      var mapHtml=loc
+        ?'<div class="s-section s-z4">'
+          +'<img class="s-map s-map-mo" src="/assets/contact/map-mobile.png" alt="'+esc(loc.value)+'" loading="lazy"/>'
+          +'<img class="s-map s-map-dt" src="/assets/contact/map-desktop.png" alt="'+esc(loc.value)+'" loading="lazy"/>'
+          +(mapsUrl?'<a class="s-maps-link" href="'+esc(mapsUrl)+'" target="_blank" rel="noopener noreferrer">\uad6c\uae00 \uc9c0\ub3c4 \uc5d0\uc11c \ubcf4\uae30</a>':'')
+          +'</div>':'';
+
+      var html='<div class="s-outer"><div class="s-col">'
+        +'<div class="s-bg s-bg-top" aria-hidden="true"></div>'
+        +'<div class="s-bg s-bg-bottom" aria-hidden="true"></div>'
+        +'<div class="s-title-row s-z6">'
+          +'<h1 class="s-title">'+esc(contact.detail.title)+'</h1>'
+          +'<div class="s-share-wrap">'
+            +'<button class="s-share-btn" id="s-share-btn" aria-label="\uacf5\uc720">'+SVG_SHARE+'</button>'
+          +'</div>'
+        +'</div>'
+        +(loc?'<div class="s-section s-z5">'
+          +'<img class="s-icon" src="/assets/contact/icon-map-pin.svg" alt="" aria-hidden="true"/>'
+          +'<p class="s-label">\uc8fc\uc18c</p>'
+          +'<div class="s-addr-lines">'+addrHtml+'</div>'
+          +'</div>':'')
+        +mapHtml
+        +'<div class="s-z3 s-card-outer"><div class="s-card"><div class="s-card-body">'
+          +phoneHtml+(pri&&kk?'<hr class="s-hr"/>':'')+kakaoHtml
+        +'</div></div></div>'
+        +'</div></div>';
+
+      var page=document.getElementById('static-page');
+      page.innerHTML=html; page.style.display='block';
+
+      document.querySelectorAll('.s-copy-btn[data-copy]').forEach(function(btn){
+        btn.addEventListener('click',function(){ copyText(this.getAttribute('data-copy')); });
+      });
+      document.getElementById('s-share-btn').addEventListener('click', copyShareLink);
+
+      var title=contact.detail.title+' | 6ixgo';
+      document.title=title;
+      var ogT=document.querySelector('meta[property="og:title"]');
+      var twT=document.querySelector('meta[name="twitter:title"]');
+      var ogU=document.querySelector('meta[property="og:url"]');
+      if(ogT) ogT.setAttribute('content',title);
+      if(twT) twT.setAttribute('content',title);
+      if(ogU) ogU.setAttribute('content',window.location.href.split('?')[0]);
+    }
+
+    function getEmbedUrl(slug,prefix) {
+      var path=prefix.length?'/'+prefix.join('/')+'/contact/'+slug:'/contact/'+slug;
+      return FE_ORIGIN+path+'?_shareUrl='+encodeURIComponent(window.location.origin+'/'+slug);
+    }
+
+    function applySlugTitle(slug) {
+      var t=slug.replace(/[-_]/g,' ').replace(/\b\w/g,function(c){return c.toUpperCase();})+' | 6ixgo';
+      document.title=t;
+      var ogT=document.querySelector('meta[property="og:title"]');
+      var twT=document.querySelector('meta[name="twitter:title"]');
+      var ogU=document.querySelector('meta[property="og:url"]');
+      if(ogT) ogT.setAttribute('content',t);
+      if(twT) twT.setAttribute('content',t);
+      if(ogU) ogU.setAttribute('content',window.location.href.split('?')[0]);
+    }
+
+    (function boot() {
+      var parts=getPathParts();
+      var slug=parts.length?parts[parts.length-1]:null;
+      var prefix=parts.slice(0,-1);
+      if(!slug){ document.getElementById('not-found').style.display='block'; return; }
+      applySlugTitle(slug);
+      if(MODE==='static'){
+        fetch('/data/'+slug+'.json',{cache:'no-store'})
+          .then(function(r){ if(!r.ok) throw 0; return r.json(); })
+          .then(function(d){ renderStatic(d); })
+          .catch(function(){ document.getElementById('not-found').style.display='block'; });
+      } else {
+        var fr=document.getElementById('frame');
+        fr.src=getEmbedUrl(slug,prefix); fr.style.display='block';
+      }
+    })();
+</script>
 </body>
 </html>

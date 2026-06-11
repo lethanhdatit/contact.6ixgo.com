@@ -1,0 +1,39 @@
+{
+  "message": "OK",
+  "data": {
+    "id": "656bd70d-2a20-4343-8c70-8eee66424046",
+    "slug": "samsung-sky-midtown",
+    "layout": "default",
+    "detail": {
+      "locale": "kor",
+      "title": "삼성하늘병원 미드타운점",
+      "fields": [
+        {
+          "field": "location",
+          "value": "Số 53 Mỹ Văn, Đường 16,Phường Tân Mỹ, HCM City",
+          "lat": 10.722936373883554,
+          "lng": 106.72723654872499,
+          "displayOrder": 0
+        },
+        {
+          "field": "phoneNumber",
+          "value": "028-3872-1190",
+          "displayOrder": 1
+        },
+        {
+          "field": "phoneNumber",
+          "value": "028-3872-1191",
+          "displayOrder": 2
+        },
+        {
+          "field": "kakaoTalk",
+          "value": "samsungsky3",
+          "displayOrder": 3
+        }
+      ]
+    },
+    "createdTs": "2026-06-10T09:39:42.67777Z",
+    "lastUpdatedTs": "2026-06-11T01:21:31.757349Z"
+  },
+  "ts": "6/11/2026 4:43:52 AM"
+}
