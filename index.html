@@ -105,7 +105,7 @@
     if (embedUrl) {
       var slug = window.location.pathname.split('/').filter(Boolean).pop() || '';
       if (slug) {
-        var pageTitle = slug.replace(/-/g, ' ')
+        var pageTitle = slug.replace(/[-_]/g, ' ')
           .replace(/\b\w/g, function(c) { return c.toUpperCase(); })
           + ' | 6ixgo';
         // Update <title> and OG meta for JS-aware crawlers (Telegram, iMessage, etc.)

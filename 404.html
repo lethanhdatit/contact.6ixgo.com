@@ -21,7 +21,7 @@
       var parts = window.location.pathname.replace(/^\/+|\/+$/g, '').split('/').filter(Boolean);
       var slug = parts[parts.length - 1] || '';
       if (slug) {
-        var title = slug.replace(/-/g, ' ').replace(/\b\w/g, function (c) { return c.toUpperCase(); }) + ' | 6ixgo';
+        var title = slug.replace(/[-_]/g, ' ').replace(/\b\w/g, function (c) { return c.toUpperCase(); }) + ' | 6ixgo';
         document.querySelector('meta[property="og:title"]').setAttribute('content', title);
         document.querySelector('meta[name="twitter:title"]').setAttribute('content', title);
         document.querySelector('meta[property="og:url"]') &&
