@@ -241,9 +241,6 @@
       border-radius:9999px; background:#343a40; padding:12px 40px;
       font-size:16px; font-weight:500; line-height:24px; color:#fff;
       text-decoration:none; transition:opacity .15s;
-      /* button reset */
-      border:none; cursor:pointer; -webkit-appearance:none; appearance:none;
-      font-family:inherit;
     }
     @media (min-width:768px) { .s-call { width:auto; padding:12px 48px; } }
     .s-call:hover { opacity:.9; }
@@ -252,9 +249,6 @@
     .s-sec-tel {
       font-size:13px; line-height:1.4; color:#343a40;
       text-decoration:underline; text-decoration-color:#343a40; transition:color .15s;
-      /* button reset */
-      background:none; border:none; cursor:pointer; padding:0;
-      -webkit-appearance:none; appearance:none; font-family:inherit;
     }
     .s-sec-tel:hover { color:#3F57F6; text-decoration-color:#3F57F6; }
     .s-hr { width:200px; border:none; border-top:1px solid #f1f3f5; }
@@ -454,16 +448,15 @@
       }
 
       var secHtml=sec.map(function(ph){
-        var n=telNum(ph.value);
         return '<div class="s-sec-wrap"><span class="s-or">또는</span>'
-          +'<button type="button" class="s-sec-tel" onclick="window.location.href=\'tel:'+n+'\'">'+esc(ph.value)+'</button></div>';
+          +'<a class="s-sec-tel" href="tel:'+telNum(ph.value)+'">'+esc(ph.value)+'</a></div>';
       }).join('');
 
       var phoneHtml=pri
         ?'<div class="s-phones">'
           +'<img class="s-icon" src="/assets/contact/icon-phone.svg" alt="" aria-hidden="true"/>'
           +'<p class="s-label-sm">문의</p>'
-          +'<button type="button" class="s-call" onclick="window.location.href=\'tel:'+telNum(pri.value)+'\'">'+esc(pri.value)+'&nbsp;\uc5f0\uacb0</button>'
+          +'<a class="s-call" href="tel:'+telNum(pri.value)+'">'+esc(pri.value)+'&nbsp;\uc5f0\uacb0</a>'
           +secHtml+'</div>':'';
 
       var kakaoHtml=kk
