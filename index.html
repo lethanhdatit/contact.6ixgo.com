@@ -50,15 +50,103 @@
     #not-found h1 { font-size: 24px; margin-bottom: 12px; }
     #not-found p  { font-size: 15px; color: #868e96; }
     #not-found a  { display: inline-block; margin-top: 24px; color: #3f57f6; text-decoration: none; }
-    #toast {
-      position: fixed; bottom: 32px; left: 50%;
-      transform: translateX(-50%) translateY(12px);
-      background: #343a40; color: #fff;
-      padding: 10px 20px; border-radius: 8px; font-size: 14px;
-      opacity: 0; transition: opacity .2s, transform .2s;
-      pointer-events: none; z-index: 9999; white-space: nowrap;
+    /* ── Share panel ─────────────────────────────────────────────── */
+    #share-overlay {
+      display: none; position: fixed; inset: 0; z-index: 998;
     }
-    #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    @media (max-width:767px) { #share-overlay { background: rgba(0,0,0,.45); } }
+    #share-panel {
+      display: none; position: fixed; z-index: 999;
+      background: #fff; border-radius: 16px;
+      box-shadow: 0 10px 40px rgba(0,0,0,.14);
+      width: 380px; overflow: hidden;
+    }
+    @media (max-width:767px) {
+      #share-panel {
+        width: 100% !important; left: 0 !important; top: auto !important;
+        bottom: 0; border-radius: 16px 16px 0 0;
+        transform: translateY(100%); transition: transform .3s ease;
+      }
+      #share-panel.mob-open { transform: translateY(0); }
+    }
+    .sp-handle { display: none; }
+    @media (max-width:767px) {
+      .sp-handle {
+        display: block; width: 32px; height: 4px;
+        background: #dee2e6; border-radius: 2px;
+        margin: 12px auto 0;
+      }
+    }
+    .sp-inner { padding: 20px 12px; }
+    @media (max-width:767px) { .sp-inner { padding: 0 16px 28px; } }
+    .sp-mob-title {
+      display: none; text-align: center;
+      font-size: 18px; line-height: 24px; font-weight: 600;
+      color: #21252a; margin: 10px 0 20px;
+    }
+    @media (max-width:767px) { .sp-mob-title { display: block; } }
+    .sp-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 32px;
+    }
+    @media (max-width:767px) { .sp-header { display: none; } }
+    .sp-title { font-size: 24px; line-height: 32px; font-weight: 700; color: #21252a; }
+    .sp-close-btn {
+      background: none; border: none; cursor: pointer;
+      display: flex; align-items: center; color: #cfd4da; padding: 4px;
+    }
+    .sp-copy-label {
+      font-size: 16px; line-height: 24px; font-weight: 600;
+      color: #21252a; margin-bottom: 16px;
+    }
+    @media (max-width:767px) { .sp-copy-label { font-size: 14px; line-height: 20px; margin-bottom: 8px; } }
+    .sp-url-box {
+      display: flex; align-items: center; gap: 16px;
+      border-radius: 12px; background: #f8f9fa; padding: 14px 16px;
+    }
+    .sp-url-text {
+      flex: 1; min-width: 0; overflow: hidden;
+      text-overflow: ellipsis; white-space: nowrap;
+      font-size: 14px; line-height: 20px; font-weight: 500; color: #565e66;
+    }
+    .sp-copy-icon-btn {
+      flex-shrink: 0; margin-left: auto; background: none; border: none;
+      cursor: pointer; display: flex; align-items: center; color: #565e66;
+      padding: 0; transition: opacity .15s;
+    }
+    .sp-copy-icon-btn:hover { opacity: .7; }
+    /* ── Alerts (top-right) ──────────────────────────────────────── */
+    #alerts-container {
+      position: fixed; top: 40px; right: 0; left: 0;
+      z-index: 100001; display: flex; flex-direction: column;
+      gap: 15px; pointer-events: none;
+    }
+    @media (min-width:540px) { #alerts-container { left: auto; right: 20px; } }
+    .alert-item {
+      pointer-events: all; position: relative; border-radius: 16px;
+      background: #56bcb3; padding: 16px;
+      width: calc(100% - 40px); margin: 0 20px;
+      display: flex; flex-direction: row; align-items: flex-start;
+      column-gap: 12px; box-shadow: 0 2px 8px rgba(0,0,0,.15);
+      transform: translateX(100%); transition: transform .3s ease; overflow: hidden;
+    }
+    @media (min-width:540px) {
+      .alert-item { width: 380px; margin: 0; border-radius: 12px; }
+    }
+    .alert-item.a-show { transform: translateX(0); }
+    .alert-icon { flex-shrink: 0; width: 24px; height: 24px; }
+    @media (min-width:540px) { .alert-icon { width: 32px; height: 32px; } }
+    .alert-body { flex: 1; min-width: 0; }
+    .alert-title { font-size: 14px; line-height: 20px; font-weight: 600; color: #fff; }
+    .alert-desc { font-size: 14px; line-height: 20px; color: rgba(255,255,255,.85); margin-top: 2px; }
+    .alert-close {
+      flex-shrink: 0; background: none; border: none; cursor: pointer;
+      color: rgba(255,255,255,.7); display: flex; align-items: center; padding: 0;
+    }
+    .alert-progress {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      height: 3px; background: rgba(255,255,255,.5);
+    }
     #static-page { display: none; }
     .s-outer { min-height: 100vh; min-height: 100dvh; background: #f4f4f5; }
     .s-col {
@@ -172,7 +260,27 @@
   <iframe id="frame" allow="clipboard-write;clipboard-read;geolocation;camera;microphone;payment;autoplay;fullscreen" referrerpolicy="no-referrer-when-downgrade" title="6ixgo Contact"></iframe>
   <div id="static-page"></div>
   <div id="not-found"><h1>페이지를 찾을 수 없습니다</h1><p>The page you're looking for doesn't exist.</p><a href="https://6ixgo.com">← Go to 6ixgo</a></div>
-  <div id="toast"></div>
+  <div id="share-overlay"></div>
+  <div id="share-panel" role="dialog" aria-modal="true" aria-label="공유하기">
+    <div class="sp-handle"></div>
+    <div class="sp-inner">
+      <p class="sp-mob-title">공유하기</p>
+      <div class="sp-header">
+        <span class="sp-title">공유하기</span>
+        <button class="sp-close-btn" id="share-close-btn" aria-label="닫기">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path clip-rule="evenodd" d="M7.28033 6.21967C6.98744 5.92678 6.51256 5.92678 6.21967 6.21967C5.92678 6.51256 5.92678 6.98744 6.21967 7.28033L10.9393 12L6.21967 16.7197C5.92678 17.0126 5.92678 17.4874 6.21967 17.7803C6.51256 18.0732 6.98744 18.0732 7.28033 17.7803L12 13.0607L16.7197 17.7803C17.0126 18.0732 17.4874 18.0732 17.7803 17.7803C18.0732 17.4874 18.0732 17.0126 17.7803 16.7197L13.0607 12L17.7803 7.28033C18.0732 6.98744 18.0732 6.51256 17.7803 6.21967C17.4874 5.92678 17.0126 5.92678 16.7197 6.21967L12 10.9393L7.28033 6.21967Z" fill="currentColor" fill-rule="evenodd"/></svg>
+        </button>
+      </div>
+      <p class="sp-copy-label">링크 복사</p>
+      <div class="sp-url-box">
+        <span class="sp-url-text" id="sp-url-display"></span>
+        <button class="sp-copy-icon-btn" id="sp-copy-btn" aria-label="복사">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path clip-rule="evenodd" d="M4.37315 1.25L4.375 1.25H12.8125L12.8143 1.25C13.5591 1.25212 14.2728 1.54893 14.7994 2.07558C15.3261 2.60224 15.6229 3.31592 15.625 4.06072C15.625 4.06565 15.625 4.07059 15.6249 4.07552L15.6186 4.375H15.8984C17.4733 4.375 18.75 5.65169 18.75 7.22656V15.8984C18.75 17.4733 17.4733 18.75 15.8984 18.75H7.22656C5.65169 18.75 4.375 17.4733 4.375 15.8984V15.625H4.0625L4.06072 15.625C3.31592 15.6229 2.60224 15.3261 2.07558 14.7994C1.54893 14.2728 1.25212 13.5591 1.25 12.8143L1.25 12.8125V4.375L1.25 4.37315C1.25245 3.54559 1.58228 2.75263 2.16745 2.16745C2.75263 1.58228 3.54559 1.25245 4.37315 1.25ZM5.625 15.8984C5.625 16.783 6.34204 17.5 7.22656 17.5H15.8984C16.783 17.5 17.5 16.783 17.5 15.8984V7.22656C17.5 6.34204 16.783 5.625 15.8984 5.625H14.9826C14.9813 5.625 14.9801 5.625 14.9789 5.625H7.22656C6.34204 5.625 5.625 6.34204 5.625 7.22656V15.8984ZM14.3684 4.375H7.22656C5.65169 4.375 4.375 5.65169 4.375 7.22656V14.375H4.06351C3.64928 14.3736 3.25239 14.2085 2.95947 13.9155C2.66656 13.6226 2.50139 13.2258 2.5 12.8115V4.37599C2.50169 3.87898 2.69988 3.4028 3.05134 3.05134C3.4028 2.69988 3.87898 2.50169 4.37599 2.5H12.8115C13.2258 2.50139 13.6226 2.66656 13.9155 2.95947C14.207 3.25098 14.372 3.64545 14.375 4.05751L14.3684 4.375Z" fill="currentColor" fill-rule="evenodd"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div id="alerts-container"></div>
   <script>
     /* =====================================================================
        MODE FLAG  — switch rendering approach
@@ -193,30 +301,96 @@
         .replace(/"/g,'&quot;').replace(/'/g,'&#039;');
     }
 
-    function showToast(msg) {
-      var t=document.getElementById('toast');
-      t.textContent=msg; t.classList.add('show');
-      setTimeout(function(){ t.classList.remove('show'); }, 2000);
-    }
+    var SVG_NOTI_SUCCESS='<svg fill="none" height="100%" viewBox="0 0 32 32" width="100%" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#nsc)"><path clip-rule="evenodd" d="M16 0.625L19.2284 3.95169L23.6875 2.68488L24.82 7.18006L29.3151 8.3125L28.0483 12.7717L31.375 16L28.0483 19.2284L29.3151 23.6875L24.8199 24.82L23.6875 29.3151L19.2283 28.0483L16 31.375L12.7716 28.0483L8.3125 29.3151L7.18 24.8199L2.68488 23.6875L3.95169 19.2283L0.625 16L3.95169 12.7716L2.68488 8.3125L7.18006 7.18L8.3125 2.68488L12.7717 3.95169L16 0.625Z" fill-rule="evenodd" stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="22.9256" stroke-width="1.5"/><path clip-rule="evenodd" d="M14.1237 16.826L20.6294 10.3203L23.0599 12.7507L14.1237 21.6869L8.9375 16.5008L11.3679 14.0703L14.1237 16.826Z" fill="white" fill-rule="evenodd"/></g><defs><clipPath id="nsc"><rect fill="white" height="100%" width="100%"/></clipPath></defs></svg>';
+    var SVG_ALERT_X='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path clip-rule="evenodd" d="M7.28033 6.21967C6.98744 5.92678 6.51256 5.92678 6.21967 6.21967C5.92678 6.51256 5.92678 6.98744 6.21967 7.28033L10.9393 12L6.21967 16.7197C5.92678 17.0126 5.92678 17.4874 6.21967 17.7803C6.51256 18.0732 6.98744 18.0732 7.28033 17.7803L12 13.0607L16.7197 17.7803C17.0126 18.0732 17.4874 18.0732 17.7803 17.7803C18.0732 17.4874 18.0732 17.0126 17.7803 16.7197L13.0607 12L17.7803 7.28033C18.0732 6.98744 18.0732 6.51256 17.7803 6.21967C17.4874 5.92678 17.0126 5.92678 16.7197 6.21967L12 10.9393L7.28033 6.21967Z" fill="currentColor" fill-rule="evenodd"/></svg>';
 
-    function copyText(text, msg) {
-      var m = msg || '\ud074\ub9bd\ubcf4\ub4dc\uc5d0 \ubcf5\uc0ac\ub418\uc5c8\uc2b5\ub2c8\ub2e4';
-      function done() { showToast(m); }
+    function doCopy(text, onDone) {
       if (navigator.clipboard) {
-        navigator.clipboard.writeText(text).then(done).catch(fb);
-      } else { fb(); }
-      function fb() {
-        var ta=document.createElement('textarea');
-        ta.value=text; ta.style.cssText='position:fixed;top:-9999px;left:-9999px';
-        document.body.appendChild(ta); ta.select();
-        try { document.execCommand('copy'); done(); } catch(e){}
-        document.body.removeChild(ta);
+        navigator.clipboard.writeText(text).then(onDone).catch(function(){ legacyCopy(text, onDone); });
+      } else { legacyCopy(text, onDone); }
+    }
+    function legacyCopy(text, onDone) {
+      var ta=document.createElement('textarea');
+      ta.value=text; ta.style.cssText='position:fixed;top:-9999px;left:-9999px;opacity:0';
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); onDone(); } catch(e){}
+      document.body.removeChild(ta);
+    }
+    function copyText(text, desc) {
+      doCopy(text, function(){
+        showAlert('Success', desc || '\ud074\ub9bd\ubcf4\ub4dc\uc5d0 \ubcf5\uc0ac\ub418\uc5c8\uc2b5\ub2c8\ub2e4');
+      });
+    }
+    function showAlert(title, desc) {
+      var container=document.getElementById('alerts-container');
+      var item=document.createElement('div');
+      item.className='alert-item';
+      item.innerHTML=
+        '<div class="alert-icon">'+SVG_NOTI_SUCCESS+'</div>'
+        +'<div class="alert-body">'
+          +'<div class="alert-title">'+esc(title)+'</div>'
+          +'<div class="alert-desc">'+esc(desc)+'</div>'
+        +'</div>'
+        +'<button class="alert-close" aria-label="\ub2eb\uae30">'+SVG_ALERT_X+'</button>'
+        +'<div class="alert-progress"></div>';
+      container.appendChild(item);
+      item.querySelector('.alert-close').addEventListener('click', function(){ dismissAlert(item); });
+      requestAnimationFrame(function(){
+        requestAnimationFrame(function(){
+          item.classList.add('a-show');
+          var bar=item.querySelector('.alert-progress');
+          bar.style.transition='width 3000ms linear';
+          bar.style.width='0%';
+        });
+      });
+      var t=setTimeout(function(){ dismissAlert(item); }, 3000);
+      item._t=t;
+    }
+    function dismissAlert(item) {
+      clearTimeout(item._t);
+      item.classList.remove('a-show');
+      setTimeout(function(){ if(item.parentNode) item.parentNode.removeChild(item); }, 300);
+    }
+    function openSharePanel() {
+      var url=window.location.href.split('?')[0];
+      document.getElementById('sp-url-display').textContent=url;
+      var overlay=document.getElementById('share-overlay');
+      var panel=document.getElementById('share-panel');
+      overlay.style.display='block';
+      panel.style.display='block';
+      if (window.innerWidth>=768) {
+        var btn=document.getElementById('s-share-btn');
+        if (btn) {
+          var r=btn.getBoundingClientRect();
+          var pw=380;
+          var left=r.right-pw;
+          if (left<16) left=16;
+          if (left+pw>window.innerWidth-16) left=window.innerWidth-pw-16;
+          panel.style.left=left+'px';
+          panel.style.top=(r.bottom+8)+'px';
+        }
+      } else {
+        panel.style.left=''; panel.style.top='';
+        requestAnimationFrame(function(){
+          requestAnimationFrame(function(){ panel.classList.add('mob-open'); });
+        });
       }
     }
-
-    function copyShareLink() {
-      copyText(window.location.href.split('?')[0],
-        '\ub9c1\ud06c\uac00 \ubcf5\uc0ac\ub418\uc5c8\uc2b5\ub2c8\ub2e4');
+    function closeSharePanel() {
+      var overlay=document.getElementById('share-overlay');
+      var panel=document.getElementById('share-panel');
+      if (window.innerWidth<768) {
+        panel.classList.remove('mob-open');
+        setTimeout(function(){ panel.style.display='none'; overlay.style.display='none'; }, 300);
+      } else {
+        panel.style.display='none'; overlay.style.display='none';
+      }
+    }
+    function copyShareUrl() {
+      doCopy(window.location.href.split('?')[0], function(){
+        closeSharePanel();
+        showAlert('Success', 'URL \ubcf5\uc0ac \uc131\uacf5');
+      });
     }
 
     function processFields(fields) {
@@ -235,7 +409,7 @@
       return {line1:p.slice(0,-2).join(',').trim(), line2:p.slice(-2).join(',').trim()};
     }
 
-    var SVG_SHARE='<svg width="20" height="20" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M176,160a40.06,40.06,0,0,0-29.05,12.28l-55.28-30.69a39.4,39.4,0,0,0,0-27.18L146.95,83.72A40,40,0,1,0,136,56a40.4,40.4,0,0,0,1.06,9.17L81.78,95.86a40,40,0,1,0,0,64.28L137.06,191A40.4,40.4,0,0,0,136,200a40,40,0,1,0,40-40ZM176,48a16,16,0,1,1-16,16A16,16,0,0,1,176,48ZM72,144a16,16,0,1,1,16-16A16,16,0,0,1,72,144ZM176,216a16,16,0,1,1,16-16A16,16,0,0,1,176,216Z" fill="white"/></svg>';
+    var SVG_SHARE='<svg width="20" height="20" viewBox="0 0 256 256" fill="white" xmlns="http://www.w3.org/2000/svg"><path d="M176,160a39.89,39.89,0,0,0-28.62,12.09l-46.1-29.63a39.8,39.8,0,0,0,0-28.92l46.1-29.63a40,40,0,1,0-8.65-13.45l-46.1,29.63a40,40,0,1,0,0,55.82l46.1,29.63A40,40,0,1,0,176,160Z"/></svg>';
 
     var SVG_COPY='<svg width="16" height="16" viewBox="0 0 256 256" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M216,32H88a8,8,0,0,0-8,8V80H40a8,8,0,0,0-8,8V216a8,8,0,0,0,8,8H168a8,8,0,0,0,8-8V176h40a8,8,0,0,0,8-8V40A8,8,0,0,0,216,32ZM160,208H48V96H160Zm48-48H176V88a8,8,0,0,0-8-8H96V48H208Z"/></svg>';
 
@@ -312,7 +486,7 @@
       document.querySelectorAll('.s-copy-btn[data-copy]').forEach(function(btn){
         btn.addEventListener('click',function(){ copyText(this.getAttribute('data-copy')); });
       });
-      document.getElementById('s-share-btn').addEventListener('click', copyShareLink);
+      document.getElementById('s-share-btn').addEventListener('click', openSharePanel);
 
       var title=contact.detail.title+' | 6ixgo';
       document.title=title;
@@ -339,6 +513,12 @@
       if(twT) twT.setAttribute('content',t);
       if(ogU) ogU.setAttribute('content',window.location.href.split('?')[0]);
     }
+
+    (function initPanelListeners(){
+      document.getElementById('share-overlay').addEventListener('click', closeSharePanel);
+      document.getElementById('share-close-btn').addEventListener('click', closeSharePanel);
+      document.getElementById('sp-copy-btn').addEventListener('click', copyShareUrl);
+    })();
 
     (function boot() {
       var parts=getPathParts();
